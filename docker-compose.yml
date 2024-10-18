@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: rets
+      POSTGRES_PASSWORD: retsonpostgres
+      POSTGRES_DB: retsdb
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - retsnetwork
+
+  server:
+    build: ./server
+    environment:
+      DATABASE_URL: postgres://rets:retsonpostgres@db:5432/retsdb
+    depends_on:
+      - db
+    ports:
+      - "4000:4000"
+    networks:
+      - retsnetwork
+
+volumes:
+  db-data:
+
+networks:
+  retsnetwork:
