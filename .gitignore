@@ -1,0 +1,9 @@
+.git
+
+server/node_modules/
+
+server/dist/
+
+server/package.json
+
+server/package-lock.json
