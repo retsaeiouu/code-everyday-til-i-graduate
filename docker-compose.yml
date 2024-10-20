@@ -14,7 +14,7 @@ services:
   server:
     build: ./server
     environment:
-      DATABASE_URL: postgres://rets:retsonpostgres@db:5432/retsdb
+      DATABASE_URL: ${DB_URL}
     depends_on:
       - db
     ports:
