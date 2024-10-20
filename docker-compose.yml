@@ -4,7 +4,7 @@ services:
     image: postgres:alpine
     environment:
       POSTGRES_USER: rets
-      POSTGRES_PASSWORD: retsonpostgres
+      POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: retsdb
     volumes:
       - db-data:/var/lib/postgresql/data
