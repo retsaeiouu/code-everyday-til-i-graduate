@@ -1,5 +1,17 @@
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import express from "express";
+import http from "http";
+import cors from "cors";
+import pg from "pg";
+import "dotenv/config";
+
+const { Pool } = pg;
+
+const db = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
 const typeDefs = `#graphql
 
@@ -13,36 +25,37 @@ const typeDefs = `#graphql
   }
 `;
 
-const players = [
-  {
-    name: "sung jinwoo",
-    level: 10,
-  },
-  {
-    name: "ling ce",
-    level: 120,
-  },
-];
-
 const resolvers = {
   Query: {
-    players: () => players,
+    players: async () => {
+      const result = await db.query("select * from players");
+      return result.rows;
+    },
   },
 };
 
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
-const server = new ApolloServer({
+interface MyContext {
+  token?: String;
+}
+
+const app = express();
+const httpServer = http.createServer(app);
+const server = new ApolloServer<MyContext>({
   typeDefs,
   resolvers,
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
+await server.start();
+app.use(
+  "/graphql",
+  cors<cors.CorsRequest>(),
+  express.json(),
+  expressMiddleware(server, {
+    context: async ({ req }) => ({ token: req.headers.token }),
+  }),
+);
 
-// Passing an ApolloServer instance to the `startStandaloneServer` function:
-//  1. creates an Express app
-//  2. installs your ApolloServer instance as middleware
-//  3. prepares your app to handle incoming requests
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-});
-
-console.log(`🚀  Server ready at: ${url}`);
+await new Promise<void>((resolve) =>
+  httpServer.listen({ port: 4000 }, resolve),
+);
+console.log(`🚀 Server ready at http://localhost:4000/graphql`);
