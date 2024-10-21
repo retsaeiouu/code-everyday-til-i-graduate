@@ -8,8 +8,8 @@ RUN npm install
 
 COPY . .
 
-RUN npm run compile
+RUN chmod +x /usr/src/app/start.sh
 
 EXPOSE 4000
 
-CMD npm run compile && node ./dist/index.js
+CMD ["./start.sh"]

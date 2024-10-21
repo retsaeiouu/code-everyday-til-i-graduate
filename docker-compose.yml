@@ -6,6 +6,8 @@ services:
       POSTGRES_USER: rets
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: retsdb
+    ports:
+      - 5432:5432
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:

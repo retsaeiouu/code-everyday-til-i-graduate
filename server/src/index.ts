@@ -13,6 +13,20 @@ const db = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
+//  TODO: refactor all this shi out
+
+async function testConnection() {
+  try {
+    await db.connect();
+    console.log("Connected to the database successfully");
+  } catch (error) {
+    console.error("Database connection failed:", error);
+  }
+}
+
+// Call this function when starting your server
+testConnection();
+
 const typeDefs = `#graphql
 
   type Player {
