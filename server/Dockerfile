@@ -1,15 +1,13 @@
 FROM node:alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY . .
 
-RUN chmod +x /usr/src/app/start.sh
-
 EXPOSE 4000
 
-CMD ["./start.sh"]
+CMD ["npm", "run", "dev"]

@@ -3,4 +3,3 @@ server/node_modules/
 server/dist/
 
 .env
-server/.env

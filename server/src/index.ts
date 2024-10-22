@@ -5,7 +5,6 @@ import express from "express";
 import http from "http";
 import cors from "cors";
 import pg from "pg";
-import "dotenv/config";
 
 const { Pool } = pg;
 
@@ -24,7 +23,6 @@ async function testConnection() {
   }
 }
 
-// Call this function when starting your server
 testConnection();
 
 const typeDefs = `#graphql

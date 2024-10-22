@@ -16,11 +16,15 @@ services:
   server:
     build: ./server
     environment:
+      NODE_ENV: development
       DATABASE_URL: ${DB_URL}
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    ports:
+      - 4000:4000
     depends_on:
       - db
-    ports:
-      - "4000:4000"
     networks:
       - retsnetwork
 
